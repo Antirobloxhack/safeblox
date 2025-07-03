@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeBlox - Roblox Account Protection</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: #f0f0f0;
+    }
+    header {
+      background-color: #1c1c1c;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+    }
+    header h1 {
+      color: #ff4747;
+    }
+    nav a {
+      color: #f0f0f0;
+      text-decoration: none;
+      margin: 0 15px;
+    }
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      background: radial-gradient(#222, #111);
+    }
+    .hero h2 {
+      font-size: 2.5em;
+      color: #00ffd5;
+    }
+    .hero button {
+      margin: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #ff4747;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .features, .tool, .premium, footer {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+    .features ul {
+      list-style: none;
+      padding: 0;
+    }
+    .features li::before {
+      content: "✅ ";
+      color: #00ffd5;
+    }
+    .link-checker input,
+    .avatar-checker input {
+      padding: 10px;
+      width: 70%;
+      max-width: 400px;
+      margin-right: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+    .link-checker button,
+    .avatar-checker button {
+      padding: 10px 16px;
+      background: #00ffd5;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .link-checker-result,
+    .avatar-result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .premium-box {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #ff4747;
+    }
+    footer {
+      background-color: #1c1c1c;
+      color: #aaa;
+      padding: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SafeBlox</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#tools">Tools</a>
+      <a href="#tips">Tips</a>
+      <a href="#premium">Premium</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>🛡️ Protect Your Roblox Account from Scammers and Hackers!</h2>
+    <button>Check Link Safety</button>
+    <button>Download Free Safety Kit</button>
+  </section>
+
+  <section class="features">
+    <h3>What SafeBlox Can Do:</h3>
+    <ul>
+      <li>Detect Fake Robux Sites</li>
+      <li>Teach You How to Stay Safe</li>
+      <li>Help You Lock Down Your Roblox Account</li>
+      <li>Give You a Free Roblox Security Guide</li>
+    </ul>
+  </section>
+
+  <section class="tool" id="tools">
+    <h3>Try Our Link Checker</h3>
+    <div class="link-checker">
+      <input type="text" id="robloxLink" placeholder="Paste a Roblox link here..." />
+      <button onclick="checkLink()">Check Link</button>
+      <div id="linkResult" class="link-checker-result"></div>
+    </div>
+    <br><br>
+    <h3>Verify Your Avatar</h3>
+    <div class="avatar-checker">
+      <input type="text" id="usernameInput" placeholder="Enter Roblox username" />
+      <button onclick="showAvatar()">Check Avatar</button>
+      <div id="avatarContainer" class="avatar-result"></div>
+    </div>
+  </section>
+
+  <section class="premium" id="premium">
+    <h3>💰 Get the Premium Safety Kit</h3>
+    <div class="premium-box">
+      <p><strong>Only $1.99</strong></p>
+      <p>Includes bonus wallpaper, scam test, Roblox checklist, and more.</p>
+      <button>Buy Now</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 SafeBlox. All rights reserved. | Privacy | Terms | Contact</p>
+  </footer>
+
+  <script>
+    function checkLink() {
+      const link = document.getElementById("robloxLink").value.trim();
+      const resultDiv = document.getElementById("linkResult");
+
+      if (!link) {
+        resultDiv.textContent = "⚠️ Please enter a link.";
+        resultDiv.style.color = "yellow";
+        return;
+      }
+
+      const knownBadWords = ["freerobux", "robuxgenerator", "giveaway", "claimrobux", "rblx"].map(word => word.toLowerCase());
+      const isSuspicious = knownBadWords.some(word => link.toLowerCase().includes(word));
+
+      if (isSuspicious) {
+        resultDiv.textContent = "❌ This link looks dangerous. Don't trust it!";
+        resultDiv.style.color = "#ff4747";
+      } else if (link.startsWith("https://www.roblox.com")) {
+        resultDiv.textContent = "✅ This link seems safe.";
+        resultDiv.style.color = "#00ffd5";
+      } else {
+        resultDiv.textContent = "⚠️ Unknown link. Be careful if it's not from roblox.com.";
+        resultDiv.style.color = "orange";
+      }
+    }
+
+    async function showAvatar() {
+      const username = document.getElementById("usernameInput").value.trim();
+      const avatarContainer = document.getElementById("avatarContainer");
+
+      if (!username) {
+        avatarContainer.innerHTML = "⚠️ Please enter a username.";
+        return;
+      }
+
+      try {
+        const userRes = await fetch(`https://users.roblox.com/v1/usernames/users`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usernames: [username] })
+        });
+
+        const userData = await userRes.json();
+        const userId = userData.data[0]?.id;
+
+        if (!userId) {
+          avatarContainer.innerHTML = "❌ User not found.";
+          return;
+        }
+
+        const avatarRes = await fetch(`https://thumbnails.roblox.com/v1/users/avatar?userIds=${userId}&size=150x150&format=Png&isCircular=false`);
+        const avatarData = await avatarRes.json();
+        const avatarUrl = avatarData.data[0]?.imageUrl;
+
+        avatarContainer.innerHTML = `
+          <p>✅ Found ${username}'s avatar:</p>
+          <img src="${avatarUrl}" alt="${username}'s avatar">
+        `;
+      } catch (err) {
+        avatarContainer.innerHTML = "⚠️ Error fetching avatar.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
